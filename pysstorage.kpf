@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="fc2fb85f-0fe5-4cb4-8fab-cccc8a995868" kpf_version="4" name="pysstorage.kpf">
+<preference-set idref="fc2fb85f-0fe5-4cb4-8fab-cccc8a995868">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+</project>
