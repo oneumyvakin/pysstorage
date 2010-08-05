@@ -38,7 +38,7 @@ class CompoundFile(object):
         self.first_mini_fat_sector_pos = 0
         self.mini_fat_sector_count = 0
         self.first_difat_sector_pos = 0        
-        self.difat = []
+        self.difat = [-1]*109
         
     @property
     def sector_size(self):
@@ -112,7 +112,7 @@ class CompoundFile(object):
         self.trans_sig_num, self.mini_stream_cutoff_size, self.first_mini_fat_sector_pos, \
         self.mini_fat_sector_count, self.first_difat_sector_pos, difat_sector_count \
             = struct.unpack('<9i', self.mmap[40:76])
-        self.difat = list(struct.unpack('<109I', self.mmap[76:76+109*4]))
+        self.difat = list(struct.unpack('<109i', self.mmap[76:76+109*4]))
         
         if (self.dir_sector_count + self.fat_sector_count + \
             self.mini_fat_sector_count + difat_sector_count) >= self.sector_count or \
