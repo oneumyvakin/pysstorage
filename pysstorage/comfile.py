@@ -17,6 +17,10 @@ class CompoundFile(object):
     
     SIGNATURE = '\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'
     
+    FATSECT = 0xFFFFFFFD
+    ENDOFCHAIN = 0xFFFFFFFE
+    FREESECT = 0xFFFFFFFF    
+    
     def __init__(self, file_or_path=None, readonly=True, overwrite=False, bufsize=DEFAULT_BUFFER_SIZE):
         if file_or_path:
             self.open(file_or_path, readonly, overwrite, bufsize)
@@ -111,12 +115,12 @@ class CompoundFile(object):
         self.dir_sector_count, self.fat_sector_count, self.first_dir_sector_pos, \
         self.trans_sig_num, self.mini_stream_cutoff_size, self.first_mini_fat_sector_pos, \
         self.mini_fat_sector_count, self.first_difat_sector_pos, difat_sector_count \
-            = struct.unpack('<9i', self.mmap[40:76])
-        self.difat = list(struct.unpack('<109i', self.mmap[76:76+109*4]))
+            = struct.unpack('<9I', self.mmap[40:76])
+        self.difat = list(struct.unpack('<109I', self.mmap[76:76+109*4]))
         
         if (self.dir_sector_count + self.fat_sector_count + \
             self.mini_fat_sector_count + difat_sector_count) >= self.sector_count or \
            self.first_dir_sector_pos >= self.sector_count or \
            self.first_mini_fat_sector_pos >= self.sector_count or \
-           self.first_difat_sector_pos >= self.sector_count:
+           (self.first_difat_sector_pos != self.ENDOFCHAIN and self.first_difat_sector_pos >= self.sector_count):
             raise FormatError("invalid size of body")
